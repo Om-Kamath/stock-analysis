@@ -2,6 +2,8 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import pdfkit as pdf
+from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
@@ -16,11 +18,21 @@ def price_info(stock):
     ticker = yf.Ticker(stock)
     return ticker.info
 
+def generate_pdf(info):
+    print("pdf being generated")
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(40, 10, info['shortName'])
+    return pdf
 
-st.header("ticktick.boom")
+st.title("ticktick.boom")
 c1 = st.container()
 s = c1.text_input("Enter Stock Ticker", placeholder="Eg. AAPL")
 btn = c1.button("Enter")
+
+env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
+template = env.get_template("template.html")
 
 ## Main App CHECK
 with st.spinner("Crunching the data..."):
@@ -60,17 +72,28 @@ with st.spinner("Crunching the data..."):
             df["Mavg"] = mavg
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
-            print(df["year"])
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
+            html = template.render(
+                shortName=info["shortName"],
+                currentPrice=info["currentPrice"],
+                dayHigh=info["dayHigh"],
+                dayLow=info["dayLow"],
+                revenueGrowth=info["revenueGrowth"],
+                trailingPE=info["trailingPE"],
+                priceToBook=info["priceToBook"],
+                longBusinessSummary=info["longBusinessSummary"]
+            )
+            pdf = pdf.from_string(html, False)
+            c1.download_button(label="Download",data=pdf,file_name="stock.pdf", mime="application/octet-stream")
             
-
-    except:
+    except Exception as e:
         c1.markdown(
             '<h3 style="color:red">Incorrect ticker.</h3>', unsafe_allow_html=True
         )
+        print(e)
 
 
 ## HIDING THE FOOTER
