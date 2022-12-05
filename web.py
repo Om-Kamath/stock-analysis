@@ -23,7 +23,7 @@ c1 = st.container()
 s = c1.text_input("Enter Stock Ticker", placeholder="Eg. AAPL")
 btn = c1.button("Enter")
 
-## Main App
+## Main App CHECK
 with st.spinner("Crunching the data..."):
     try:
         if btn:
