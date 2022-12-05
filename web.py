@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 import altair as alt
+import plotly.express as px
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
@@ -59,34 +60,10 @@ with st.spinner("Crunching the data..."):
             mavg = close_px.rolling(window=100).mean()
             df["Mavg"] = mavg
             df["datetime"] = pd.to_datetime(df.index)
-
-            c1.markdown("## Chart")
-            chart_data1 = (
-                alt.Chart(df)
-                .mark_line()
-                .encode(
-                    x=alt.X("datetime"),
-                    y=alt.Y("Close"),
-                    tooltip=[
-                        alt.Tooltip("datetime", title="Date"),
-                        alt.Tooltip("Close", title="Closing Price"),
-                    ],
-                )
-            )
-            chart_data2 = (
-                alt.Chart(df)
-                .mark_line()
-                .encode(
-                    x=alt.X("datetime", title="Time Period"),
-                    y=alt.Y("Mavg", title="Price"),
-                    color=alt.value("#FFAA00"),
-                    tooltip=[
-                        alt.Tooltip("datetime", title="Date"),
-                        alt.Tooltip("Close", title="Moving Average Price"),
-                    ],
-                )
-            )
-            c1.altair_chart(chart_data1 + chart_data2, use_container_width=True)
+            df["year"]=df["datetime"].dt.year
+            print(df["year"])
+            fig = px.line(df, x="datetime",y=["Close","Mavg"])
+            c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
             
