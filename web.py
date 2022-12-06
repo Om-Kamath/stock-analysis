@@ -9,7 +9,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoad
 import os 
 import io
 
-pio.kaleido.scope.chromium_args = ("--headless", "--no-sandbox", "--single-process","--disable-gpu")
+pio.kaleido.scope.chromium_args = tuple([arg for arg in pio.kaleido.scope.chromium_args if arg != "--disable-dev-shm-usage"])
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
