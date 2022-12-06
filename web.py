@@ -82,6 +82,8 @@ with st.spinner("Crunching the data..."):
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
             fig_json = fig.to_json()
+            png = pio.to_image(fig_json)
+            png_base64 = base64.b64encode(png).decode('ascii')
             # buffer = io.BytesIO()
             # pio.write_image(fig,file=buffer, format="png")
             # png_base64 = base64.b64encode(fig1).decode('ascii')
