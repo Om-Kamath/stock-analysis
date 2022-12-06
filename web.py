@@ -9,6 +9,10 @@ from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoad
 import os 
 import io
 
+st.set_page_config(
+   page_title="ticktick.boom",
+   page_icon="💣",
+)
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
