@@ -79,7 +79,8 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            # png_base64 = base64.b64encode(fig.to_image()).decode('ascii')
+            png_base64 = base64.b64encode(fig.to_image()).decode('ascii')
+            print(png_base64)
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
