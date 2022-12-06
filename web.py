@@ -2,13 +2,10 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-import plotly.io as pio
-import base64
 import pdfkit as pdf
-from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
-import os 
-import io
+from jinja2 import Environment, select_autoescape, FileSystemLoader
 
+## Setting the page title and favicon
 st.set_page_config(
    page_title="ticktick.boom",
    page_icon="💣",
@@ -28,59 +25,65 @@ def price_info(stock):
     return ticker.info
 
 ## MAIN APP
-st.title("ticktick.boom")
-c1 = st.container()
-s = c1.text_input("Enter Stock Ticker", placeholder="Eg. AAPL")
-btn = c1.button("Enter")
+st.title("ticktick.boom") # Title of app
+c1 = st.container() # Main container
+s = c1.text_input("Enter Stock Ticker", placeholder="Eg. AAPL") # Ticker Input
+btn = c1.button("Enter") # Submit button
 
+## SETTING THE FILE PATH FOR PDF TEMPLATE
 env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
 template = env.get_template("template.html")
 
-
+## APP LOADING 
 with st.spinner("Crunching the data..."):
     try:
         if btn:
-            df = historic_data(s)
+            df = historic_data(s) 
             info = price_info(s)
+
+            # Creating 3 columns (Details)
             col1, col2, col3 = c1.columns(3)
+            
+            # Adding metric components to each column 
             with col1:
                 st.metric(
                     label=info["shortName"],
                     value="%.2f" % info["currentPrice"],
                     delta="%.2f" % (info["currentPrice"] - info["previousClose"]),
                 )
-
             with col2:
                 st.metric(label="Today's High", value="%.2f" % info["dayHigh"])
-
             with col3:
                 st.metric(label="Today's Low", value="%.2f" % info["dayLow"])
             
+            # Lower columns (Performance Indicators)
             col6, col7, col8 = c1.columns(3)
+
+            # Adding metric components to each column 
             with col6:
                 st.metric(
                     label="Revenue Growth (yoy)",
                     value="%.2f" % (info["revenueGrowth"]*100)+"%"
                 )
-
             with col7:
                 st.metric(label="PE Ratio", value="%.2f" % info["trailingPE"])
-
             with col8:
                 st.metric(label="PB Ratio", value="%.2f" % info["priceToBook"])
 
-            if not os.path.exists("images"):
-                os.mkdir("images")
-
+            # Generating Chart
             close_px = df["Close"]
-            mavg = close_px.rolling(window=100).mean()
+            mavg = close_px.rolling(window=100).mean() # Calculating Moving Average of Stock Close
             df["Mavg"] = mavg
             df["datetime"] = pd.to_datetime(df.index)
-            df["year"]=df["datetime"].dt.year
-            fig = px.line(df, x="datetime",y=["Close","Mavg"])
+
+            fig = px.line(df, x="datetime",y=["Close","Mavg"]) # Using Plotly Express to create line chart
             c1.plotly_chart(fig,use_container_width=True)
+
+            # Adding Company Business Details
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
+
+            # Generating PDF using the template
             html = template.render(
                 shortName=info["shortName"],
                 currentPrice=info["currentPrice"],
