@@ -7,6 +7,7 @@ import base64
 import pdfkit as pdf
 from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 import os 
+import io
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
@@ -79,8 +80,9 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            png_base64 = base64.b64encode(pio.to_image(fig,format="png")).decode('ascii')
-            print(png_base64)
+            buffer = io.BytesIO()
+            fig.write_image(file=buffer, format="png")
+            png_base64 = base64.b64encode(buffer).decode('ascii')
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
