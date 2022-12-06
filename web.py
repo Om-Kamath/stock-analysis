@@ -81,8 +81,6 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            buffer = io.StringIO()
-            fig.write_html(buffer)
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
@@ -95,7 +93,6 @@ with st.spinner("Crunching the data..."):
                 trailingPE=info["trailingPE"],
                 priceToBook=info["priceToBook"],
                 longBusinessSummary=info["longBusinessSummary"],
-                png_base64=buffer.getvalue()
             )
             pdf = pdf.from_string(html, False)
             c1.download_button(label="Download",data=pdf,file_name="stock.pdf", mime="application/octet-stream")
