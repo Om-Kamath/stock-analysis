@@ -4,6 +4,7 @@ import streamlit as st
 import plotly.express as px
 import pdfkit as pdf
 from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
+import os 
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
@@ -67,12 +68,16 @@ with st.spinner("Crunching the data..."):
             with col8:
                 st.metric(label="PB Ratio", value="%.2f" % info["priceToBook"])
 
+            if not os.path.exists("images"):
+                os.mkdir("images")
+
             close_px = df["Close"]
             mavg = close_px.rolling(window=100).mean()
             df["Mavg"] = mavg
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
+            fig.write_image("images/fig1.png")
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
