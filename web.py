@@ -81,7 +81,7 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            print(type(fig))
+            img = px.image.get(fig,format='png')
             # buffer = io.BytesIO()
             # pio.write_image(fig,file=buffer, format="png")
             # png_base64 = base64.b64encode(buffer).decode('ascii')
