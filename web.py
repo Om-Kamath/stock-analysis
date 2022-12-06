@@ -9,7 +9,6 @@ from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoad
 import os 
 import io
 
-pio.kaleido.scope.chromium_args = tuple([arg for arg in pio.kaleido.scope.chromium_args if arg != "--disable-dev-shm-usage"])
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
@@ -82,8 +81,8 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            buffer = io.BytesIO()
-            pio.write_image(fig,file=buffer, format="png")
+            # buffer = io.BytesIO()
+            # pio.write_image(fig,file=buffer, format="png")
             # png_base64 = base64.b64encode(buffer).decode('ascii')
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
