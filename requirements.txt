@@ -3,5 +3,4 @@ streamlit
 pandas
 pdfkit
 plotly
-kaleido
 base64
