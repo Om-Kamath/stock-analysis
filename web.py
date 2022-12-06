@@ -9,12 +9,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoad
 import os 
 import io
 
-pio.kaleido.scope.chromium_args = (
-        "--headless",
-        "--no-sandbox",
-        "--single-process",
-        "--disable-gpu"
-    )
+pio.kaleido.scope.chromium_args = ("--headless", "--no-sandbox", "--single-process","--disable-gpu")
 
 @st.experimental_memo
 ## FETCHING HISTORIC DATA
