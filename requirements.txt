@@ -3,3 +3,4 @@ streamlit
 pandas
 pdfkit
 plotly
+psutil

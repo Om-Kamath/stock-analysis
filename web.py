@@ -95,9 +95,7 @@ with st.spinner("Crunching the data..."):
                 longBusinessSummary=info["longBusinessSummary"],
                 # png_base64=png_base64
             )
-            print(html)
             pdf = pdf.from_string(html, False)
-            print(pdf)
             c1.download_button(label="Download",data=pdf,file_name="stock.pdf", mime="application/octet-stream")
             
     except Exception as e:
