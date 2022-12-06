@@ -27,14 +27,7 @@ def price_info(stock):
     ticker = yf.Ticker(stock)
     return ticker.info
 
-# def generate_pdf(info):
-#     print("pdf being generated")
-#     pdf = FPDF()
-#     pdf.add_page()
-#     pdf.set_font('Arial', 'B', 16)
-#     pdf.cell(40, 10, info['shortName'])
-#     return pdf
-
+## MAIN APP
 st.title("ticktick.boom")
 c1 = st.container()
 s = c1.text_input("Enter Stock Ticker", placeholder="Eg. AAPL")
@@ -43,7 +36,7 @@ btn = c1.button("Enter")
 env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
 template = env.get_template("template.html")
 
-## Main App CHECK
+
 with st.spinner("Crunching the data..."):
     try:
         if btn:
