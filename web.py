@@ -18,13 +18,13 @@ def price_info(stock):
     ticker = yf.Ticker(stock)
     return ticker.info
 
-def generate_pdf(info):
-    print("pdf being generated")
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 16)
-    pdf.cell(40, 10, info['shortName'])
-    return pdf
+# def generate_pdf(info):
+#     print("pdf being generated")
+#     pdf = FPDF()
+#     pdf.add_page()
+#     pdf.set_font('Arial', 'B', 16)
+#     pdf.cell(40, 10, info['shortName'])
+#     return pdf
 
 st.title("ticktick.boom")
 c1 = st.container()
@@ -81,12 +81,14 @@ with st.spinner("Crunching the data..."):
                 currentPrice=info["currentPrice"],
                 dayHigh=info["dayHigh"],
                 dayLow=info["dayLow"],
-                revenueGrowth=info["revenueGrowth"],
+                revenueGrowth=info["revenueGrowth"]*100,
                 trailingPE=info["trailingPE"],
                 priceToBook=info["priceToBook"],
                 longBusinessSummary=info["longBusinessSummary"]
             )
+            print(html)
             pdf = pdf.from_string(html, False)
+            print(pdf)
             c1.download_button(label="Download",data=pdf,file_name="stock.pdf", mime="application/octet-stream")
             
     except Exception as e:
