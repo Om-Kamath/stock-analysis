@@ -99,7 +99,7 @@ with st.spinner("Crunching the data..."):
                 trailingPE=info["trailingPE"],
                 priceToBook=info["priceToBook"],
                 longBusinessSummary=info["longBusinessSummary"],
-                # png_base64=png_base64
+                png_base64=png_base64
             )
             pdf = pdf.from_string(html, False)
             c1.download_button(label="Download",data=pdf,file_name="stock.pdf", mime="application/octet-stream")
