@@ -81,10 +81,10 @@ with st.spinner("Crunching the data..."):
             df["datetime"] = pd.to_datetime(df.index)
             df["year"]=df["datetime"].dt.year
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
-            img = px.image.get(fig,format='png')
+            fig1 = px.line(df, x="datetime",y=["Close","Mavg"],format='png')
             # buffer = io.BytesIO()
             # pio.write_image(fig,file=buffer, format="png")
-            # png_base64 = base64.b64encode(buffer).decode('ascii')
+            png_base64 = base64.b64encode(fig1).decode('ascii')
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
