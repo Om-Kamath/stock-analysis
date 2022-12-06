@@ -82,7 +82,7 @@ with st.spinner("Crunching the data..."):
             fig = px.line(df, x="datetime",y=["Close","Mavg"])
             buffer = io.BytesIO()
             fig.write_image(file=buffer, format="png")
-            png_base64 = base64.b64encode(buffer).decode('ascii')
+            # png_base64 = base64.b64encode(buffer).decode('ascii')
             c1.plotly_chart(fig,use_container_width=True)
             c1.markdown("### Company Info")
             c1.write(info["longBusinessSummary"])
